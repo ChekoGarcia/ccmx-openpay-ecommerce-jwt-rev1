@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage async="false" continueOnError="false" enabled="true" name="AM-Request-Post-Ine-Verificacion">
+    <DisplayName>AM-Request-Post-Ine-Verificacion</DisplayName>
+    <Properties/>
+    <!--<Remove>
+        <Headers>
+            <Header name="X-DEVOPS-AUTH"/>
+            <Header name="X-DEVOPS-APPNAME"/>
+        </Headers>
+    </Remove>
+    -->
+    <Set>
+        <Verb>POST</Verb>
+        <Headers>
+            <Header name="Authorization-1">Bearer {keycloak.access_token}</Header>
+            <Header name="Otorgante">{bitacora.claveOtorganteXML}</Header>
+            <Header name="Usuario">{bitacora.claveUsuario}</Header>
+            <!--<Header name="X-DEVOPS-AUTH">sDzeC29Wt72zbma8vJqFE5PvtLVbdBWjiEw</Header>-->
+            <!--<Header name="X-DEVOPS-APPNAME">apigee-dev</Header>-->
+            <!-- <Header name="X-SCOPE">{private.x.scope.sustitucion}</Header>-->
+        </Headers>
+    </Set>
+    <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+    <AssignTo createNew="false" transport="http" type="request"/>
+</AssignMessage>

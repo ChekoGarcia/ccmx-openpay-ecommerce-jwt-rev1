@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<OASValidation continueOnError="true" enabled="true" name="OAS-ValidateContract">
+    <DisplayName>OAS-ValidateContract</DisplayName>
+    <Properties/>
+    <Source>request</Source>
+    <OASResource>oas://OPENPAYCDC.WWAF.yaml</OASResource>
+    <Options>
+        <ValidateMessageBody>true</ValidateMessageBody>
+    </Options>
+</OASValidation>

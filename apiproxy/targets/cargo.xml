@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<TargetEndpoint name="cargo">
+    <Description/>
+    <FaultRules/>
+    <PreFlow name="PreFlow">
+        <Request>
+            <Step>
+                <Name>AM-DELETE-PATHSUFGFIX</Name>
+            </Step>
+            <!--<Step>
+                <Name>CRL-Concurrencia</Name>
+            </Step>-->
+        </Request>
+        <Response>
+            <Step>
+                <Name>AM-Add-CORS</Name>
+            </Step>
+            <!--<Step>
+                <Name>CRL-Concurrencia</Name>
+            </Step>-->
+        </Response>
+    </PreFlow>
+    <PostFlow name="PostFlow">
+        <Request/>
+        <Response>
+            <!--<Step>
+                <Name>CRL-Concurrencia</Name>
+            </Step>-->
+            <Step>
+                <Name>JS-JWT-CLAIM</Name>
+            </Step>
+            <Step>
+                <Name>JWT-Generate-JWT-1</Name>
+            </Step>
+            <Step>
+                <Name>JS-JWT-Validation</Name>
+            </Step>
+        </Response>
+    </PostFlow>
+    <Flows/>
+    <HTTPTargetConnection>
+        <Properties>
+            <Property name="success.codes">1xx,2xx,3xx,4xx,5xx</Property>
+        </Properties>
+        <LoadBalancer>
+            <Server name="target_pdmx"/>
+        </LoadBalancer>
+        <Path>/ecommer-openpay/mx/cdc/v1/cargo</Path>
+    </HTTPTargetConnection>
+    <DefaultFaultRule name="default-fault">
+        <Step>
+            <Name>FC-SF-Collect-Log-Data</Name>
+            <Condition>proxy_settings.logging_enabled == true</Condition>
+        </Step>
+        <AlwaysEnforce>true</AlwaysEnforce>
+    </DefaultFaultRule>
+</TargetEndpoint>

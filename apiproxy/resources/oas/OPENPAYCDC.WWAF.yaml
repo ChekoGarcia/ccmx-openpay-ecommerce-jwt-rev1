@@ -1,0 +1,1032 @@
+openapi: 3.0.1
+info:
+  title: OPEYPAY CDC
+  description: <p> Proyecto Openpay CDC para el pago de servicio mediante el Ecommerce | Jose Gpe Leon |
+    API Openpay</p><br/>
+  version: 1.0.1
+servers:
+- url: https://services.circulodecredito.com.mx/v1/jwt/openpay
+tags:
+- name: Consumo OPENPAY CDC
+  externalDocs:
+    description: Servicio de pago de servicio Ecommerce API Openpay
+    url: https://services.circulodecredito.com.mx/v1/jwt/openpay
+security:
+  - x-api-key: []
+    x-signature: []
+    username: []
+    password: []
+    Authorization: []
+paths:
+  /cargo:
+    post:
+      tags:
+      - Cargo en Openpay
+      summary: Invoca la petición para generar cargo mediante los datos proporcionados
+      description: Permite registrar el cargo bancario para el pago de un servicio
+      parameters:
+      - name: x-signature
+        in: header
+        description: Firma generada con la llave privada
+        required: true
+        schema:
+          type: string
+      - name: x-api-key
+        in: header
+        description: ConsumerKey obtenido desde el portal de desarrolladores
+        required: true
+        schema:
+          type: string
+      - name: username
+        in: header
+        description: Usuario de Círculo de Crédito
+        required: true
+        schema:
+          type: string
+      - name: password
+        in: header
+        description: Contraseña de Círculo de Crédito
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: JWT de autorizacion de sesion
+        required: true
+        schema:
+          type: string
+      - name: x-session
+        in: header
+        description: Encode Base64 de email y idcdc del usuario
+        required: false
+        schema:
+          type: string
+      requestBody:
+        description: Solicitud para generar el cargo
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/Cargo'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RespuestaCargo'
+        400:
+          description: BAD REQUEST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "400.1"
+                  mensaje: El campo "{Campo}" no puede estar vacío.
+        401:
+          description: UNAUTHORIZED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "401.1"
+                  mensaje: Acceso no autorizado, authorization no válido.
+                - codigo: "401.2"
+                  mensaje: Acceso no autorizado.
+                - codigo: "401.3"
+                  mensaje: Acceso no autorizado, no tiene el producto asociado.
+                - codigo: "401.4"
+                  mensaje: Acceso no autorizado, no tiene acceso al recurso.
+        403:
+          description: FORBIDDEN
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "403.1"
+                  mensaje: No se pudo autenticar, authorization no es válido
+        404:
+          description: NOT FOUND
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "404.1"
+                  mensaje: No se encontraron resultados.
+        429:
+          description: TOO MANY REQUESTS
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "429.1"
+                  mensaje: Se han enviado demasiadas solicitudes. Se debe esperar antes de realizar una nueva solicitud.
+        500:
+          description: INTERNAL SERVER ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "500.1"
+                  mensaje: Ocurrió un problema, inténtelo nuevamente más tarde.
+        503:
+          description: SERVICE UNAVAILABLE
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "503.1"
+                  mensaje: Servicio no disponible.
+      x-codegen-request-body-name: body
+    options:
+      tags:
+      - Consumo Cargo API Openpay
+      responses:
+        200:
+          description: OK
+          content: {}
+        403:
+          description: FORBIDDEN
+          content: {}
+  /generarRce:
+    post:
+      tags:
+      - Generar RCE
+      summary: Invoca la petición para generar el RCE del Cliente
+      description: Permite generar y enviar el RCE por correo electrónico al Cliente
+      parameters:
+      - name: x-signature
+        in: header
+        description: Firma generada con la llave privada
+        required: true
+        schema:
+          type: string
+      - name: x-api-key
+        in: header
+        description: ConsumerKey obtenido desde el portal de desarrolladores
+        required: true
+        schema:
+          type: string
+      - name: username
+        in: header
+        description: Usuario de Círculo de Crédito
+        required: true
+        schema:
+          type: string
+      - name: password
+        in: header
+        description: Contraseña de Círculo de Crédito
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: JWT de autorizacion de sesion
+        required: true
+        schema:
+          type: string
+      - name: x-session
+        in: header
+        description: Encode Base64 de email y idcdc del usuario
+        required: false
+        schema:
+          type: string
+      requestBody:
+        description: Solicitud para generar el RCE
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/GeneraRCE'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RespuestaGeneraRCE'
+        400:
+          description: BAD REQUEST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "400.1"
+                  mensaje: El campo "{Campo}" no puede estar vacío.
+        401:
+          description: UNAUTHORIZED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "401.1"
+                  mensaje: Acceso no autorizado, authorization no válido.
+                - codigo: "401.2"
+                  mensaje: Acceso no autorizado.
+                - codigo: "401.3"
+                  mensaje: Acceso no autorizado, no tiene el producto asociado.
+                - codigo: "401.4"
+                  mensaje: Acceso no autorizado, no tiene acceso al recurso.
+        403:
+          description: FORBIDDEN
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "403.1"
+                  mensaje: No se pudo autenticar, authorization no es válido
+        404:
+          description: NOT FOUND
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "404.1"
+                  mensaje: No se encontraron resultados.
+        429:
+          description: TOO MANY REQUESTS
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "429.1"
+                  mensaje: Se han enviado demasiadas solicitudes. Se debe esperar antes de realizar una nueva solicitud.
+        500:
+          description: INTERNAL SERVER ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "500.1"
+                  mensaje: Ocurrió un problema, inténtelo nuevamente más tarde.
+        503:
+          description: SERVICE UNAVAILABLE
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "503.1"
+                  mensaje: Servicio no disponible.
+      x-codegen-request-body-name: body
+    options:
+      tags:
+      - Consumo Cargo API Openpay
+      responses:
+        200:
+          description: OK
+          content: {}
+        403:
+          description: FORBIDDEN
+          content: {}
+  /cargoReferencia:
+    post:
+      tags:
+      - Cargo Referencia
+      summary: Genera una referencia para el cargo
+      description: Permite generar una referencia para realizar un cargo bancario mediante los datos proporcionados
+      parameters:
+      - name: x-signature
+        in: header
+        description: Firma generada con la llave privada
+        required: true
+        schema:
+          type: string
+      - name: x-api-key
+        in: header
+        description: ConsumerKey obtenido desde el portal de desarrolladores
+        required: true
+        schema:
+          type: string
+      - name: username
+        in: header
+        description: Usuario de Círculo de Crédito
+        required: true
+        schema:
+          type: string
+      - name: password
+        in: header
+        description: Contraseña de Círculo de Crédito
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: JWT de autorizacion de sesion
+        required: true
+        schema:
+          type: string
+      - name: x-session
+        in: header
+        description: Encode Base64 de email y idcdc del usuario
+        required: false
+        schema:
+          type: string
+      requestBody:
+        description: Solicitud para generar una referencia de cargo
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - folioMatch
+              - amount
+              - id_cdc
+              - description
+              - order_id
+              - email
+              properties:
+                folioMatch:
+                  type: string
+                  example : "123654"
+                amount:
+                  type: number
+                  description: Monto del cargo
+                  example: 34.2
+                id_cdc:
+                  type: string
+                  description: Identificador del Cliente
+                  example: CC15-06-567894123654789
+                description:
+                  type: string
+                  description: Descripción del cargo
+                  example: Mi RCE + Credit Score
+                order_id:
+                  type: number
+                  description: Identificador de la orden de pago
+                  example: 552233
+                email:
+                  type: string
+                  description: Correo electrónico del propietario de la tarjeta
+                  example: rayito@gmail.com
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: Identificador del cargo
+                    example: "552233"
+                  id_transaction:
+                    type: string
+                    description: Identificador de la transacción
+                    example: trngllcq1hhrazuguor
+                  referencia:
+                    type: string
+                    description: Referencia generada para el cargo
+                    example: "13432246416"
+                  bar_code_url:
+                    type: string
+                    description: URL del código de barras para el pago
+                    example: https://sandbox-api.openpay.mx/barcode/13432246416?width=1&height=45&text=false
+                  fecha_vencimiento:
+                    type: string
+                    format: date-time
+                    description: Fecha de vencimiento de la referencia
+                    example: "2024-09-12 10:10:30"
+        400:
+          description: BAD REQUEST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "400.1"
+                  mensaje: El campo "{Campo}" no puede estar vacío.
+        401:
+          description: UNAUTHORIZED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "401.1"
+                  mensaje: Acceso no autorizado, authorization no válido.
+                - codigo: "401.2"
+                  mensaje: Acceso no autorizado.
+                - codigo: "401.3"
+                  mensaje: Acceso no autorizado, no tiene el producto asociado.
+                - codigo: "401.4"
+                  mensaje: Acceso no autorizado, no tiene acceso al recurso.
+        403:
+          description: FORBIDDEN
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "403.1"
+                  mensaje: No se pudo autenticar, authorization no es válido
+        404:
+          description: NOT FOUND
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "404.1"
+                  mensaje: No se encontraron resultados.
+        429:
+          description: TOO MANY REQUESTS
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "429.1"
+                  mensaje: Se han enviado demasiadas solicitudes. Se debe esperar antes de realizar una nueva solicitud.
+        500:
+          description: INTERNAL SERVER ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "500.1"
+                  mensaje: Ocurrió un problema, inténtelo nuevamente más tarde.
+        503:
+          description: SERVICE UNAVAILABLE
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "503.1"
+                  mensaje: Servicio no disponible.
+  /confirmacionReferencia:
+   post:
+    tags:
+      - Confirmación Referencia
+    summary: Confirma el estado de una referencia
+    description: Permite confirmar el estado de una referencia mediante el identificador de la transacción
+    parameters:
+      - name: x-signature
+        in: header
+        description: Firma generada con la llave privada
+        required: true
+        schema:
+          type: string
+      - name: x-api-key
+        in: header
+        description: ConsumerKey obtenido desde el portal de desarrolladores
+        required: true
+        schema:
+          type: string
+      - name: username
+        in: header
+        description: Usuario de Círculo de Crédito
+        required: true
+        schema:
+          type: string
+      - name: password
+        in: header
+        description: Contraseña de Círculo de Crédito
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: JWT de autorizacion de sesion
+        required: true
+        schema:
+          type: string
+      - name: x-session
+        in: header
+        description: Encode Base64 de email y idcdc del usuario
+        required: false
+        schema:
+          type: string
+    requestBody:
+      description: Solicitud para confirmar el estado de una referencia
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - id
+              - type
+              - event_date
+              - status
+            properties:
+              id:
+                type: string
+                description: Identificador de la transacción
+                example: trngdxcq1sxrrazuguor
+              type:
+                type: string
+                description: Tipo de evento
+                example: store
+              event_date:
+                type: string
+                format: date-time
+                description: Fecha del evento
+                example: "2024-10-04T14:4:59-06:00"  # Corregido a formato correcto
+              status:
+                type: string
+                description: Estado del evento
+                example: completed
+      required: true
+    responses:
+      200:
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: Identificador del cargo
+                  example: "663521"
+                id_transaction:
+                  type: string
+                  description: Identificador de la transacción
+                  example: trngdiiq1sxllazuguor
+      400:
+        description: BAD REQUEST
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Errores'
+            example:
+              errores:
+                - codigo: "400.1"
+                  mensaje: El campo "{Campo}" no puede estar vacío.
+      401:
+        description: UNAUTHORIZED
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Errores'
+            example:
+              errores:
+                - codigo: "401.1"
+                  mensaje: Acceso no autorizado, authorization no válido.
+                - codigo: "401.2"
+                  mensaje: Acceso no autorizado.
+                - codigo: "401.3"
+                  mensaje: Acceso no autorizado, no tiene el producto asociado.
+                - codigo: "401.4"
+                  mensaje: Acceso no autorizado, no tiene acceso al recurso.
+      403:
+        description: FORBIDDEN
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Errores'
+            example:
+              errores:
+                - codigo: "403.1"
+                  mensaje: No se pudo autenticar, authorization no es válido.
+      404:
+        description: NOT FOUND
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Errores'
+            example:
+              errores:
+                - codigo: "404.1"
+                  mensaje: No se encontraron resultados.
+      429:
+        description: TOO MANY REQUESTS
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Errores'
+            example:
+              errores:
+                - codigo: "429.1"
+                  mensaje: Se han enviado demasiadas solicitudes. Se debe esperar antes de realizar una nueva solicitud.
+      500:
+        description: INTERNAL SERVER ERROR
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Errores'
+            example:
+              errores:
+                - codigo: "500.1"
+                  mensaje: Ocurrió un problema, inténtelo nuevamente más tarde.
+      503:
+        description: SERVICE UNAVAILABLE
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Errores'
+            example:
+              errores:
+                - codigo: "503.1"
+                  mensaje: Servicio no disponible.
+
+  /consultaVigencia:
+    post:
+      tags:
+      - Consulta Vigencia
+      summary: Consulta la vigencia de un cargo
+      description: Permite consultar la vigencia de un cargo mediante el identificador del cliente y el folio
+      parameters:
+      - name: x-signature
+        in: header
+        description: Firma generada con la llave privada
+        required: true
+        schema:
+          type: string
+      - name: x-api-key
+        in: header
+        description: ConsumerKey obtenido desde el portal de desarrolladores
+        required: true
+        schema:
+          type: string
+      - name: username
+        in: header
+        description: Usuario de Círculo de Crédito
+        required: true
+        schema:
+          type: string
+      - name: password
+        in: header
+        description: Contraseña de Círculo de Crédito
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: JWT de autorizacion de sesion
+        required: true
+        schema:
+          type: string
+      - name: x-session
+        in: header
+        description: Encode Base64 de email y idcdc del usuario
+        required: false
+        schema:
+          type: string
+      requestBody:
+        description: Solicitud para consultar la vigencia de un cargo
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - id_cdc
+              - folioMatch
+              properties:
+                id_cdc:
+                  type: string
+                  description: Identificador del Cliente
+                  example: CC15-06-567894123654789
+                folioMatch:
+                  type: string
+                  description: Identificador del folio
+                  example: "163412"
+                order_id:
+                  type: string
+                  description: Identificador del folio
+                  example: "163412"
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  solicitudes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        fecha_vencimiento:
+                          type: string
+                          format: date-time
+                          description: Fecha de vencimiento del cargo
+                          example: "2024-09-12 10:10:30"
+                        fecha_actual:
+                          type: string
+                          format: date-time
+                          description: Fecha actual
+                          example: "2024-09-09 10:10:45"
+                        producto:
+                          type: string
+                          description: Descripción del producto
+                          example: Mi RCE + Credit Score
+                        tiempo_restante:
+                          type: string
+                          description: Tiempo restante hasta la fecha de vencimiento
+                          example: 71 horas
+                        aplicado:
+                          type: boolean
+                          description: Estado de aplicación del cargo
+                          example: false
+                    description: Lista de solicitudes
+                example:
+                  solicitudes:
+                  - fecha_vencimiento: "2024-09-12 10:10:30"
+                    fecha_actual: "2024-09-09 10:10:45"
+                    producto: Mi RCE + Credit Score
+                    tiempo_restante: 71 horas
+                    aplicado: false
+        204:
+          description: NO CONTENT
+        400:
+          description: BAD REQUEST
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "400.1"
+                  mensaje: El campo "{Campo}" no puede estar vacío.
+        401:
+          description: UNAUTHORIZED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "401.1"
+                  mensaje: Acceso no autorizado, authorization no válido.
+                - codigo: "401.2"
+                  mensaje: Acceso no autorizado.
+                - codigo: "401.3"
+                  mensaje: Acceso no autorizado, no tiene el producto asociado.
+                - codigo: "401.4"
+                  mensaje: Acceso no autorizado, no tiene acceso al recurso.
+        403:
+          description: FORBIDDEN
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "403.1"
+                  mensaje: No se pudo autenticar, authorization no es válido
+        404:
+          description: NOT FOUND
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "404.1"
+                  mensaje: No se encontraron resultados.
+        429:
+          description: TOO MANY REQUESTS
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "429.1"
+                  mensaje: Se han enviado demasiadas solicitudes. Se debe esperar antes de realizar una nueva solicitud.
+        500:
+          description: INTERNAL SERVER ERROR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "500.1"
+                  mensaje: Ocurrió un problema, inténtelo nuevamente más tarde.
+        503:
+          description: SERVICE UNAVAILABLE
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errores'
+              example:
+                errores:
+                - codigo: "503.1"
+                  mensaje: Servicio no disponible.
+components:
+  securitySchemes:
+    x-api-key:
+      type: apiKey
+      name: x-api-key
+      in: header
+    x-signature:
+      type: apiKey
+      name: x-signature
+      in: header
+    username:
+      type: apiKey
+      name: username
+      in: header
+    password:
+      type: apiKey
+      name: password
+      in: header
+    Authorization:
+      type: apiKey
+      name: Authorization
+      in: header
+      
+  schemas:
+  
+    Cargo:
+        required:
+        - amount
+        - card
+        - description
+        - email
+        - order_id
+        - method
+        - id
+        - folioMatch
+        - idProducto
+        type: object
+        properties:
+          id:
+            type: string
+            description: Identificador único del cargo
+            example: "kanyyyybxdbsjhhheenr"
+          folioMatch:
+            type: string
+            description: Folio de la orden para el cargo
+            example: "552233"
+          card:
+            type: object
+            properties:
+              card_number:
+                type: string
+                description: Número de la tarjeta de crédito
+                example: "4242424242424242"
+              holder_name:
+                type: string
+                description: Nombre del propietario de la tarjeta
+                minLength: 3
+                maxLength: 100
+                pattern: "^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\\s]+(?:\\s[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\\s]+)*$"
+                example: "María González"
+              expiration_year:
+                type: string
+                description: Año de expiración de la tarjeta
+                example: "22"
+              expiration_month:
+                type: string
+                description: Mes de expiración de la tarjeta
+                example: "02"
+              cvv2:
+                type: string
+                description: Código de seguridad de la tarjeta
+                example: "555"
+          amount:
+            type: number
+            description: Monto del cargo
+            example: 34.20
+          method:
+            type: string
+            enum:
+            - card
+            description: Tipo de método de pago
+            example: "card"
+          description:
+            type: string
+            description: Descripción del cargo
+            example: "pago de reporte"
+          order_id:
+            type: number
+            description: Identificador de la orden de pago
+            example: 552233
+          email:
+            maxLength: 55
+            minLength: 5
+            pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+            type: string
+            format: email-format
+            description: Correo electronico
+            example: "walter@gmail.com"
+          idProducto: 
+            type: array
+            items:
+             type: integer
+             example: 1
+          claveCupon:
+            type: string
+            example: "DIA2022"
+          idCdc:
+            type: string
+            example: "XX08-08-XXXX1416498XXXX2"
+    RespuestaCargo:
+      type: object
+      properties:
+        httpStatus:
+          type: number
+          description: Estatus Code de la respuesta
+          example: 200.0
+        success:
+          type: boolean
+          description: Estatus de la respuesta
+          example: true
+        message:
+          type: string
+          description: Mensaje de la respuesta
+          example: Success
+        errors:
+          type: string
+          description: Errores en la respuesta
+          example: '{}'
+        data:
+          type: object
+          properties:
+            orderID:
+              type: string
+              description: Identificador de la Orden de cargo
+              example: "556699"
+            idTransaccion:
+              type: string
+              description: Identificador de la transacción
+              example: "trtokowzcoryvdj0wmwk"
+            autorizacionID:
+              type: string
+              description: Identificador de la autorización por el banco receptor
+              example: "556677"
+            urlAuthorization:
+              type: string
+              description: URL para la autorización del pago
+              example: "https://api.openpay.mx/"
+    GeneraRCE:
+      type: object
+      properties:
+        id_cdc:
+          type: string
+          description: Identificador del Cliente
+        amount:
+          type: number
+          description: Monto del cargo
+        description:
+          type: string
+          description: Descripción del RCE
+        email:
+          type: string
+          description: Correo electrónico del destinatario
+    RespuestaGeneraRCE:
+      type: object
+      properties:
+        id_cdc:
+          type: string
+          description: Identificador del Cliente
+        status:
+          type: string
+          description: Estado del proceso de generación del RCE
+    Errores:
+      type: object
+      properties:
+        errores:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+    Error:
+      type: object
+      properties:
+        codigo:
+          type: string
+        mensaje:
+          type: string

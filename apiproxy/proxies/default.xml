@@ -1,0 +1,645 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ProxyEndpoint name="default">
+    <Description>VPOS</Description>
+    <PreFlow name="PreFlow">
+        <Request>
+            <Step>
+                <Name>RF-OPTIONS-CORS-Headers-Response</Name>
+                <Condition>request.verb == "OPTIONS"</Condition>
+            </Step>
+            <Step>
+                <Name>FC-ACL</Name>
+            </Step>
+            <Step>
+                <Name>JS-Get-Data</Name>
+            </Step>
+            <Step>
+                <Name>FC-HeadersMtls</Name>
+            </Step>
+            <Step>
+                <Name>KVM-OPENPAY</Name>
+            </Step>
+            <Step>
+                <Name>KVM-JWT-LOGIN</Name>
+            </Step>
+            <Step>
+                <Name>FC-Access-Control-Developer-Products</Name>
+            </Step>
+            <Step>
+                <Name>JS-Get-Developer-Data</Name>
+            </Step>
+            <Step>
+                <Name>FC-Developer-Quotas</Name>
+            </Step>
+            <Step>
+                <Name>SA-Peticiones-Segundo</Name>
+            </Step>
+            <Step>
+                <Name>OAS-ValidateContract</Name>
+            </Step>
+            <Step>
+                <Name>JS-FormatError</Name>
+                <Condition>OASValidation.OAS-ValidateContract.failed = true</Condition>
+            </Step>
+            <Step>
+                <Name>RF-Validate-Contract</Name>
+                <Condition>OASValidation.OAS-ValidateContract.failed = true</Condition>
+            </Step>
+            <Step>
+                <Name>JWT-Verify-JWT-1</Name>
+            </Step>
+            <Step>
+                <Name>JWT-Decode-JWT-1</Name>
+            </Step>
+            <Step>
+                <Name>JS-ValidateRequest</Name>
+            </Step>
+            <Step>
+                <Name>RF-Validation-JWT</Name>
+                <Condition> isValidRequest = false </Condition>
+            </Step>
+        </Request>
+        <Response/>
+    </PreFlow>
+    <PostFlow name="PostFlow">
+        <Request/>
+        <Response>
+            <Step>
+                <Name>FC-ContentType</Name>
+            </Step>
+            <Step>
+                <Name>JS-emitElapsed</Name>
+            </Step>
+            <Step>
+                <Name>AM-Response</Name>
+                <Condition>response.status.code != 200</Condition>
+            </Step>
+            <Step>
+                <Name>AM-Response-Error-Generic</Name>
+                <Condition>response.status.code != 200</Condition>
+            </Step>
+            <Step>
+                <Name>AM-Error-404.1</Name>
+                <Condition>(response.status.code == 404 and return.contentType.error = false)</Condition>
+            </Step>
+            <!--<Step>
+                <Name>AM-Error400.2</Name>
+                <Condition>response.status.code == 400</Condition>
+            </Step>-->
+            <Step>
+                <Name>AM-Error-503.1</Name>
+                <Condition>response.status.code == 503</Condition>
+            </Step>
+            <Step>
+                <Name>AM-Error-500.1</Name>
+                <Condition>
+                    (response.status.code == 500) or (return.contentType.error = true)
+                </Condition>
+            </Step>
+            <Step>
+                <Name>AM-Signature</Name>
+            </Step>
+            <Step>
+                <Name>FC-Signaturing</Name>
+                <Condition>(response.code == 200) or (response.status.code == 200)</Condition>
+            </Step>
+            <Step>
+                <Name>AM-Singnature-Response</Name>
+                <Condition>(response.code == 200) or (response.status.code == 200)</Condition>
+            </Step>
+            <!-- <Step>
+                <Name>JS-Variables-Bitacora</Name>
+            </Step>
+            <Step>
+                <Name>BF</Name>
+            </Step>-->
+            <Step>
+                <Name>EV-stadistic-response</Name>
+            </Step>
+            <Step>
+                <Name>EV-stadistic-request</Name>
+            </Step>
+            <Step>
+                <Name>Statistics-Collector</Name>
+            </Step>
+            <Step>
+                <Name>JS-Variables-Bitacora</Name>
+            </Step>
+            <Step>
+                <Name>AM-Add-Header</Name>
+            </Step>
+            <Step>
+                <Name>FC-BIC</Name>
+            </Step>
+            <Step>
+                <Name>FC-RemoveHeaders</Name>
+            </Step>
+        </Response>
+    </PostFlow>
+    <Flows>
+        <Flow name="cargo">
+            <Description>VPOS</Description>
+            <Condition>(proxy.pathsuffix MatchesPath "/cargo") and (request.verb = "POST")</Condition>
+            <Request>
+                <Step>
+                    <Name>MV-JSON-validation</Name>
+                </Step>
+                <Step>
+                    <Name>REP-HEADERS</Name>
+                </Step>
+                <Step>
+                    <Name>JTP-Cargo</Name>
+                </Step>
+                <!--SE MIGRA VALIDACIÓN A PREFLOW
+                <Step>
+                    <Name>ValidateJsonRequestCargo</Name>
+                </Step>
+                -->
+                <Step>
+                    <Name>RF-validation</Name>
+                    <Condition>javascript.error = true</Condition>
+                </Step>
+                <Step>
+                    <Name>KVM-Keycloak</Name>
+                </Step>
+                <Step>
+                    <Name>JS-emitElapsed</Name>
+                </Step>
+                <Step>
+                    <Name>FC-keycloak-cache</Name>
+                </Step>
+                <Step>
+                    <Name>JS-emitElapsed</Name>
+                </Step>
+                <Step>
+                    <Name>AM-Elapse-Kc</Name>
+                </Step>
+                <Step>
+                    <Name>JS-ExtractOtorgante</Name>
+                </Step>
+                <Step>
+                    <Name>AM-Verifying</Name>
+                </Step>
+                <Step>
+                    <Name>FC-Verifying-signature</Name>
+                </Step>
+                <Step>
+                    <Name>JS-emitElapsed</Name>
+                </Step>
+                <Step>
+                    <Name>JS-RemoveAcents</Name>
+                </Step>
+                <Step>
+                    <Name>AM-Request-Post-Ine-Verificacion</Name>
+                </Step>
+                <Step>
+                    <Name>JS-Null-request-param</Name>
+                </Step>
+                <Step>
+                    <Name>JS-Prepare-Request</Name>
+                </Step>
+            </Request>
+            <Response/>
+        </Flow>
+        <Flow name="confirmacion">
+            <Description>VPOS</Description>
+            <Condition>(proxy.pathsuffix MatchesPath "/confirmacion") and (request.verb = "POST")</Condition>
+            <Request>
+                <Step>
+                    <Name>MV-JSON-validation</Name>
+                </Step>
+                <Step>
+                    <Name>REP-HEADERS</Name>
+                </Step>
+                <Step>
+                    <Name>JTP-Cargo</Name>
+                </Step>
+                <!--SE MIGRA VALIDACIÓN A PREFLOW
+                <Step>
+                    <Name>ValidateJsonRequestCargo</Name>
+                </Step>
+                -->
+                <Step>
+                    <Name>RF-validation</Name>
+                    <Condition>javascript.error = true</Condition>
+                </Step>
+                <Step>
+                    <Name>KVM-Keycloak</Name>
+                </Step>
+                <Step>
+                    <Name>JS-emitElapsed</Name>
+                </Step>
+                <Step>
+                    <Name>FC-keycloak-cache</Name>
+                </Step>
+                <Step>
+                    <Name>JS-emitElapsed</Name>
+                </Step>
+                <Step>
+                    <Name>AM-Elapse-Kc</Name>
+                </Step>
+                <Step>
+                    <Name>JS-ExtractOtorgante</Name>
+                </Step>
+                <Step>
+                    <Name>AM-Verifying</Name>
+                </Step>
+                <Step>
+                    <Name>FC-Verifying-signature</Name>
+                </Step>
+                <Step>
+                    <Name>JS-emitElapsed</Name>
+                </Step>
+                <Step>
+                    <Name>JS-RemoveAcents</Name>
+                </Step>
+                <Step>
+                    <Name>AM-Request-Post-Ine-Verificacion</Name>
+                </Step>
+                <Step>
+                    <Name>JS-Null-request-param</Name>
+                </Step>
+                <Step>
+                    <Name>JS-Prepare-Request</Name>
+                </Step>
+            </Request>
+            <Response/>
+        </Flow>
+        <Flow name="cargoReferencia">
+            <Description>VPOS</Description>
+            <Condition>(proxy.pathsuffix MatchesPath "/cargoReferencia") and (request.verb = "POST")</Condition>
+            <Request>
+                <Step>
+                    <Name>MV-JSON-validation</Name>
+                </Step>
+                <Step>
+                    <Name>REP-HEADERS</Name>
+                </Step>
+                <Step>
+                    <Name>JTP-Cargo</Name>
+                </Step>
+                <!--SE MIGRA VALIDACIÓN A PREFLOW
+                <Step>
+                    <Name>ValidateJsonRequestCargo</Name>
+                </Step>
+                -->
+                <Step>
+                    <Name>RF-validation</Name>
+                    <Condition>javascript.error = true</Condition>
+                </Step>
+                <Step>
+                    <Name>KVM-Keycloak</Name>
+                </Step>
+                <Step>
+                    <Name>JS-emitElapsed</Name>
+                </Step>
+                <Step>
+                    <Name>FC-keycloak-cache</Name>
+                </Step>
+                <Step>
+                    <Name>JS-emitElapsed</Name>
+                </Step>
+                <Step>
+                    <Name>AM-Elapse-Kc</Name>
+                </Step>
+                <Step>
+                    <Name>JS-ExtractOtorgante</Name>
+                </Step>
+                <Step>
+                    <Name>AM-Verifying</Name>
+                </Step>
+                <Step>
+                    <Name>FC-Verifying-signature</Name>
+                </Step>
+                <Step>
+                    <Name>JS-emitElapsed</Name>
+                </Step>
+                <Step>
+                    <Name>JS-RemoveAcents</Name>
+                </Step>
+                <Step>
+                    <Name>AM-Request-Post-Ine-Verificacion</Name>
+                </Step>
+                <Step>
+                    <Name>JS-Null-request-param</Name>
+                </Step>
+                <Step>
+                    <Name>JS-Prepare-Request</Name>
+                </Step>
+            </Request>
+            <Response/>
+        </Flow>
+        <Flow name="confirmacionReferencia">
+            <Description>VPOS</Description>
+            <Condition>(proxy.pathsuffix MatchesPath "/confirmacionReferencia") and (request.verb = "POST")</Condition>
+            <Request>
+                <Step>
+                    <Name>MV-JSON-validation</Name>
+                </Step>
+                <Step>
+                    <Name>REP-HEADERS</Name>
+                </Step>
+                <Step>
+                    <Name>JTP-Cargo</Name>
+                </Step>
+                <!--SE MIGRA VALIDACIÓN A PREFLOW
+                <Step>
+                    <Name>ValidateJsonRequestCargo</Name>
+                </Step>
+                -->
+                <Step>
+                    <Name>RF-validation</Name>
+                    <Condition>javascript.error = true</Condition>
+                </Step>
+                <Step>
+                    <Name>KVM-Keycloak</Name>
+                </Step>
+                <Step>
+                    <Name>JS-emitElapsed</Name>
+                </Step>
+                <Step>
+                    <Name>FC-keycloak-cache</Name>
+                </Step>
+                <Step>
+                    <Name>JS-emitElapsed</Name>
+                </Step>
+                <Step>
+                    <Name>AM-Elapse-Kc</Name>
+                </Step>
+                <Step>
+                    <Name>JS-ExtractOtorgante</Name>
+                </Step>
+                <Step>
+                    <Name>AM-Verifying</Name>
+                </Step>
+                <Step>
+                    <Name>FC-Verifying-signature</Name>
+                </Step>
+                <Step>
+                    <Name>JS-emitElapsed</Name>
+                </Step>
+                <Step>
+                    <Name>JS-RemoveAcents</Name>
+                </Step>
+                <Step>
+                    <Name>AM-Request-Post-Ine-Verificacion</Name>
+                </Step>
+                <Step>
+                    <Name>JS-Null-request-param</Name>
+                </Step>
+                <Step>
+                    <Name>JS-Prepare-Request</Name>
+                </Step>
+            </Request>
+            <Response/>
+        </Flow>
+        <Flow name="consultaVigencia">
+            <Description>VPOS</Description>
+            <Condition>(proxy.pathsuffix MatchesPath "/consultaVigencia") and (request.verb = "POST")</Condition>
+            <Request>
+                <Step>
+                    <Name>MV-JSON-validation</Name>
+                </Step>
+                <Step>
+                    <Name>REP-HEADERS</Name>
+                </Step>
+                <Step>
+                    <Name>JTP-Cargo</Name>
+                </Step>
+                <!--SE MIGRA VALIDACIÓN A PREFLOW
+                <Step>
+                    <Name>ValidateJsonRequestCargo</Name>
+                </Step>
+                -->
+                <Step>
+                    <Name>RF-validation</Name>
+                    <Condition>javascript.error = true</Condition>
+                </Step>
+                <Step>
+                    <Name>KVM-Keycloak</Name>
+                </Step>
+                <Step>
+                    <Name>JS-emitElapsed</Name>
+                </Step>
+                <Step>
+                    <Name>FC-keycloak-cache</Name>
+                </Step>
+                <Step>
+                    <Name>JS-emitElapsed</Name>
+                </Step>
+                <Step>
+                    <Name>AM-Elapse-Kc</Name>
+                </Step>
+                <Step>
+                    <Name>JS-ExtractOtorgante</Name>
+                </Step>
+                <Step>
+                    <Name>AM-Verifying</Name>
+                </Step>
+                <Step>
+                    <Name>FC-Verifying-signature</Name>
+                </Step>
+                <Step>
+                    <Name>JS-emitElapsed</Name>
+                </Step>
+                <Step>
+                    <Name>JS-RemoveAcents</Name>
+                </Step>
+                <Step>
+                    <Name>AM-Request-Post-Ine-Verificacion</Name>
+                </Step>
+                <Step>
+                    <Name>JS-Null-request-param</Name>
+                </Step>
+                <Step>
+                    <Name>JS-Prepare-Request</Name>
+                </Step>
+            </Request>
+            <Response/>
+        </Flow>
+        <Flow name="Method Not Allowed">
+            <Description>Else</Description>
+            <Condition>((proxy.pathsuffix = "/") or (proxy.pathsuffix = "") or (proxy.pathsuffix = null)) and (request.verb != "POST")</Condition>
+            <Response>
+                <Step>
+                    <Name>RF-ApigeeErr-405</Name>
+                </Step>
+            </Response>
+            <Request/>
+        </Flow>
+    </Flows>
+    <PostClientFlow name="PostClientFlow">
+        <Request/>
+        <Response>
+            <Step>
+                <Name>FC-SF-Send-Log</Name>
+                <Condition>proxy_settings.logging_enabled == true</Condition>
+            </Step>
+        </Response>
+    </PostClientFlow>
+    <HTTPProxyConnection>
+        <BasePath>/v1/jwt/openpay</BasePath>
+        <Properties/>
+        <VirtualHost>incapsula</VirtualHost>
+    </HTTPProxyConnection>
+    <RouteRule name="Vpos_cargo">
+        <Condition>((proxy.pathsuffix MatchesPath "/cargo") and (request.verb = "POST")</Condition>
+        <TargetEndpoint>cargo</TargetEndpoint>
+    </RouteRule>
+    <RouteRule name="Vpos_cargo">
+        <Condition>((proxy.pathsuffix MatchesPath "/confirmacion") and (request.verb = "POST")</Condition>
+        <TargetEndpoint>confirma</TargetEndpoint>
+    </RouteRule>
+    <RouteRule name="Vpos_cargo">
+        <Condition>((proxy.pathsuffix MatchesPath "/cargo") and (request.verb = "POST")</Condition>
+    </RouteRule>
+    <RouteRule name="Vpos_cargo">
+        <Condition>((proxy.pathsuffix MatchesPath "/confirmacion") and (request.verb = "POST")</Condition>
+    </RouteRule>
+    <RouteRule name="Vpos_cargo">
+        <Condition>((proxy.pathsuffix MatchesPath "/cargoReferencia") and (request.verb = "POST")</Condition>
+        <TargetEndpoint>cargoReferencia</TargetEndpoint>
+    </RouteRule>
+    <RouteRule name="Vpos_cargo">
+        <Condition>((proxy.pathsuffix MatchesPath "/confirmacionReferencia") and (request.verb = "POST")</Condition>
+        <TargetEndpoint>confirmacionReferencia</TargetEndpoint>
+    </RouteRule>
+    <RouteRule name="Vpos_cargo">
+        <Condition>((proxy.pathsuffix MatchesPath "/consultaVigencia") and (request.verb = "POST")</Condition>
+        <TargetEndpoint>consultaVigencia</TargetEndpoint>
+    </RouteRule>
+    <RouteRule name="noroute"/>
+    <FaultRules>
+        <FaultRule name="falta-error-504">
+            <!-- CORE failed -->
+            <Step>
+                <Name>AM-Error-504.1</Name>
+            </Step>
+            <Condition>response.status.code = 504</Condition>
+        </FaultRule>
+        <FaultRule name="falta-error-500.4">
+            <Step>
+                <Name>AM-DefaultError</Name>
+            </Step>
+            <Condition>response.status.code = 500 or (steps.servicecallout.ExecutionFailed = true)</Condition>
+        </FaultRule>
+        <FaultRule name="falta-error-500.1">
+            <!-- Verifying Internal server error -->
+            <Step>
+                <Name>AM-Error-500.1</Name>
+            </Step>
+            <Condition>(VerifyingResponse.status.code = 500) or (servicecallout.RequestingToken.failed = true)</Condition>
+        </FaultRule>
+        <FaultRule name="falta-error-500.3">
+            <Step>
+                <Name>AM-Error-500.2</Name>
+            </Step>
+            <Condition>(fault.name Matches "SourceMessageNotAvailable")</Condition>
+        </FaultRule>
+        <FaultRule name="falta-error-429.1">
+            <!-- Quotas -->
+            <Step>
+                <Name>AM-Error-429.1</Name>
+            </Step>
+            <Condition>(fault.name = "QuotaViolation") or (ratelimit.SA-PeticionesSegundo.failed = true)</Condition>
+        </FaultRule>
+        <FaultRule name="IPDeniedAccess">
+            <Step>
+                <Name>AM-Forbidden</Name>
+                <Condition>(fault.name Matches "IPDeniedAccess") </Condition>
+            </Step>
+            <Condition>(acl.failed = true) </Condition>
+        </FaultRule>
+        <FaultRule name="400-ValidateJsonRequest">
+            <Step>
+                <Name>AM-Error-400.1</Name>
+            </Step>
+            <Condition>javascript.error = true or (raisefault.RaiseFault-validation.failed = true)</Condition>
+        </FaultRule>
+        <FaultRule name="400-JSONThreatProtection">
+            <Step>
+                <Name>AM-Error-400.3</Name>
+            </Step>
+            <Condition>(steps.messagevalidation.Failed = true or jsonattack.JSON-Threat-Protection-Cargo.failed = true or jsonattack.JSON-Threat-Protection-Confirma.failed = true)</Condition>
+        </FaultRule>
+        <FaultRule name="falta-error-400.4">
+            <!-- Verifying bad request -->
+            <Step>
+                <Name>AM-Error-400.4</Name>
+            </Step>
+            <Condition>VerifyingResponse.status.code = 400</Condition>
+        </FaultRule>
+        <FaultRule name="fault-405.1">
+            <Step>
+                <Name>AM-Error-405.1</Name>
+            </Step>
+            <Condition>(raisefault.RF-ApigeeErr-405.failed = true)</Condition>
+        </FaultRule>
+        <FaultRule name="falta-error-403.1">
+            <!-- Verifying forbidden -->
+            <Step>
+                <Name>AM-Error-403.1</Name>
+            </Step>
+            <Condition>(VerifyingResponse.status.code = 403) or (VerifyingResponse.status.code = 500 or servicecallout.Verifying.failed = true)</Condition>
+        </FaultRule>
+        <FaultRule name="falta-error-403.3">
+            <!-- aplica cuando la verificacion falla -->
+            <Step>
+                <Name>AM-Error-403.2</Name>
+            </Step>
+            <Condition>tokenResponse.status.code = 500</Condition>
+        </FaultRule>
+        <FaultRule name="error-token1-401.2">
+            <!-- Token Response -->
+            <Step>
+                <Name>AM-Error-401.2</Name>
+            </Step>
+            <Condition>(tokenResponse.status.code = 401) or (extractvariables.ExtractToken.failed = true) or (JWT.Verify-JWT-1.failed = true)
+            </Condition>
+        </FaultRule>
+        <FaultRule name="falta-error-401.3">
+            <!-- Verify Api Key -->
+            <Step>
+                <Name>AM-Error-401.3</Name>
+            </Step>
+            <Condition>(fault.name Matches "InvalidApiKey")</Condition>
+        </FaultRule>
+        <FaultRule name="falta-error-401">
+            <!-- Verify Api Key -->
+            <Step>
+                <Name>AM-Error-401.1</Name>
+            </Step>
+            <Condition>(raisefault.RF-RaiseProductValidate.failed = true) or (fault.name Matches "FailedToResolveAPIKey") or (fault.name Matches "InvalidApiKeyForGivenResource")</Condition>
+        </FaultRule>
+        <FaultRule name="falta-error-401">
+            <!-- Verify Api Key -->
+            <Step>
+                <Name>AM-Error-401.1</Name>
+            </Step>
+            <Condition>(raisefault.JSONThreatProtection.failed = true)</Condition>
+        </FaultRule>
+        <FaultRule name="400-RequestError">
+            <Step>
+                <Name>AM-Error-400.2</Name>
+                <Condition>(fault.name Matches "Failed")</Condition>
+            </Step>
+            <Condition>(messagevalidation.failed=true)</Condition>
+        </FaultRule>
+    </FaultRules>
+    <DefaultFaultRule>
+        <Step>
+            <Name>AM-Error-500.1</Name>
+        </Step>
+    </DefaultFaultRule>
+    <DefaultFaultRule name="default-fault">
+        <Step>
+            <Name>FC-SF-Collect-Log-Data</Name>
+            <Condition>proxy_settings.logging_enabled == true</Condition>
+        </Step>
+        <Step>
+            <Name>AM-Add-CORS</Name>
+            <Condition>(raisefault.OPTIONS-CORS-Headers-Response.failed = false) or (raisefault.OPTIONS-CORS-Headers-Response.failed = null)</Condition>
+        </Step>
+        <AlwaysEnforce>true</AlwaysEnforce>
+    </DefaultFaultRule>
+</ProxyEndpoint>

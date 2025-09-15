@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<JSONThreatProtection async="false" continueOnError="false" enabled="true" name="JTP-Cargo">
+    <DisplayName>JTP-Cargo</DisplayName>
+    <Properties/>
+    <ContainerDepth>3</ContainerDepth>
+    <ObjectEntryNameLength>30</ObjectEntryNameLength>
+    <ObjectEntryCount>30</ObjectEntryCount>
+    <StringValueLength>1500</StringValueLength>
+</JSONThreatProtection>

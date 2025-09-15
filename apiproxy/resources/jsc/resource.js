@@ -1,0 +1,3 @@
+ var resources = [{"orderID": "AVI0000001681DEVS","idTransaccion": "trnwvb5i7ayomafpgpbp","urlMethodReturn": "https://sandbox-api.openpay.mx/v1/mcjpnafu3ptmdlwgw3oc/charges/trnwvb5i7ayomafpgpbp/card_capture"},
+  {"orderID": "AVI0000001682DEVS","idTransaccion": "trmgs0gkc4bv9zhagise","urlMethodReturn": "https://sandbox-api.openpay.mx/v1/mcjpnafu3ptmdlwgw3oc/charges/trmgs0gkc4bv9zhagise/card_capture"}   
+ ]
