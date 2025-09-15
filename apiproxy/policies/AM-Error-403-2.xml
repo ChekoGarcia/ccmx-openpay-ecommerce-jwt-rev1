@@ -1,17 +1,12 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<AssignMessage async="false" continueOnError="false" enabled="true" name="AM-Forbidden">
-  <DisplayName>AM-Forbidden</DisplayName>
+<AssignMessage async="false" continueOnError="false" enabled="true" name="AM-Error-403-2">
+  <DisplayName>AM-Error-403-2</DisplayName>
+  <!--SE APLICA CUANDO FALLA LA VERIFICACION-->
   <Set>
     <Headers>
       <Header name="messageid">{messageid}</Header>
     </Headers>
-    <Payload contentType="application/json">
-           {
-    "errors": [{
-                "code": "403",
-                "message": "Acceso denegado"
-            }]
-            }
+    <Payload contentType="application/json">{"errores": [{"codigo": "403.2","mensaje": "No se pudo autenticar"}]}
         </Payload>
     <StatusCode>403</StatusCode>
     <ReasonPhrase>Forbidden</ReasonPhrase>

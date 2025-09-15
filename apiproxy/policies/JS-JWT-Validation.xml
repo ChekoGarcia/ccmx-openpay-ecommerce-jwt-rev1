@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Javascript async="false" continueOnError="false" enabled="true" timeLimit="200" name="JS-JWT-Validation">
-    <DisplayName>JS-JWT-Validation</DisplayName>
-    <Properties/>
-    <ResourceURL>jsc://JS-JWT-Validation.js</ResourceURL>
+  <DisplayName>JS-JWT-Validation</DisplayName>
+  <Properties />
+  <ResourceURL>jsc://js_jwt_validation.js</ResourceURL>
 </Javascript>

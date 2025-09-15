@@ -5,7 +5,7 @@
     <PreFlow name="PreFlow">
         <Request>
             <Step>
-                <Name>AM-DELETE-PATHSUFGFIX</Name>
+                <Name>AM-Remove-Path-Suffix</Name>
             </Step>
             <!--<Step>
                 <Name>CRL-Concurrencia</Name>
@@ -30,7 +30,7 @@
                 <Name>JS-JWT-CLAIM</Name>
             </Step>
             <Step>
-                <Name>JWT-Generate-JWT-1</Name>
+                <Name>JWT-Generate-User-Session</Name>
             </Step>
             <Step>
                 <Name>JS-JWT-Validation</Name>

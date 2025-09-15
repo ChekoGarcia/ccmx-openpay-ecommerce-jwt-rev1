@@ -5,7 +5,7 @@
     <PreFlow name="PreFlow">
         <Request>
             <Step>
-                <Name>AM-DELETE-PATHSUFGFIX</Name>
+                <Name>AM-Remove-Path-Suffix</Name>
             </Step>
             <!--<Step>
                 <Name>CRL-Concurrencia</Name>

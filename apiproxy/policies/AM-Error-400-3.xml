@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage async="false" continueOnError="false" enabled="true" name="AM-Error-400-3">
+  <DisplayName>AM-Error-400-3</DisplayName>
+  <Set>
+    <Payload contentType="application/json">{"errores":"La peticiÃ³n es incorrecta"}</Payload>
+    <StatusCode>400</StatusCode>
+    <ReasonPhrase>BAD REQUEST</ReasonPhrase>
+  </Set>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+</AssignMessage>

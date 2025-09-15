@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage async="false" continueOnError="false" enabled="true" name="AM-Error-400-2">
+  <DisplayName>AM-Error-400-2</DisplayName>
+  <Set>
+    <Payload contentType="application/json">{"errores":{responseSF.errores}}</Payload>
+    <StatusCode>400</StatusCode>
+    <ReasonPhrase>BAD REQUEST</ReasonPhrase>
+  </Set>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+</AssignMessage>

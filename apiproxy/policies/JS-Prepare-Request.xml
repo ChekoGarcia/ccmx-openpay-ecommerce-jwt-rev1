@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Javascript async="false" continueOnError="false" enabled="true" timeLimit="200" name="JS-Prepare-Request">
-    <DisplayName>JS-Prepare-Request</DisplayName>
-    <Properties/>
-    <ResourceURL>jsc://Prepare-Request.js</ResourceURL>
+  <DisplayName>JS-Prepare-Request</DisplayName>
+  <Properties />
+  <ResourceURL>jsc://js_prepare_request.js</ResourceURL>
 </Javascript>
